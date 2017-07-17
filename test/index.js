@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { describe, it } from 'mocha';
-import MicroMachine from '../src/index';
+import MicroMachine from '../src/micromachine';
 
 function fsmFactory() {
   const fsm = new MicroMachine('unsubmitted');

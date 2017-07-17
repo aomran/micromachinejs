@@ -78,7 +78,16 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// This is a small Finite State Machine implementation in JavaScript.
+
 var MicroMachine = function () {
+  // Initial State:
+  // ---------------
+  //
+  //     import MicroMachine from 'micromachinejs';
+  //     const initialState = 'unsubmitted';
+  //     const fsm = new MicroMachine(initialState);
+
   function MicroMachine() {
     var initialState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initial';
 
@@ -89,35 +98,19 @@ var MicroMachine = function () {
     this.callbacks = {};
   }
 
+  // Define Events:
+  // ---------------
+  //
+  //     fsm
+  //      .when('submit', {
+  //        unsubmitted: 'submitted',
+  //        reverted: 'submitted',
+  //      })
+  //      .when('revert', { submitted: 'reverted' })
+  //      .when('approve', { submitted: 'approved' });
+
+
   _createClass(MicroMachine, [{
-    key: 'getEvents',
-    value: function getEvents() {
-      return Object.values(this.events);
-    }
-  }, {
-    key: 'getStates',
-    value: function getStates() {
-      var states = [];
-      this.getEvents().forEach(function (event) {
-        var statesToAdd = Object.keys(event).concat(Object.values(event));
-        states = states.concat(statesToAdd);
-      });
-      return Array.from(new Set(states)); // return unique set
-    }
-  }, {
-    key: 'getCallbacks',
-    value: function getCallbacks(eventName) {
-      return this.callbacks[eventName] || [];
-    }
-  }, {
-    key: 'triggerCallbacks',
-    value: function triggerCallbacks(eventName, from, to) {
-      var callbacks = this.getCallbacks(eventName).concat(this.getCallbacks('any'));
-      callbacks.forEach(function (callback) {
-        callback({ from: from, to: to, eventName: eventName });
-      });
-    }
-  }, {
     key: 'when',
     value: function when(eventName) {
       var events = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -125,6 +118,23 @@ var MicroMachine = function () {
       this.events[eventName] = events;
       return this;
     }
+
+    // Listen to events:
+    // ---------------
+    //
+    //     fsm
+    //       .on('submit', (event) => {
+    //          // event.to
+    //          // event.from
+    //          // event.eventName
+    //       })
+    //       .on('submit', (event) => {
+    //          // multiple callbacks to same event are possible
+    //       })
+    //       .on('revert', (event) => {
+    //          // do something else
+    //       });
+
   }, {
     key: 'on',
     value: function on(eventName, callback) {
@@ -137,6 +147,13 @@ var MicroMachine = function () {
 
       return this;
     }
+
+    // Stop listen to events:
+    // ---------------
+    //
+    //     fsm.off('submit') // remove 'submit' event callbacks
+    //     fsm.off() // remove all event callbacks
+
   }, {
     key: 'off',
     value: function off(eventName) {
@@ -147,6 +164,13 @@ var MicroMachine = function () {
       }
       return this;
     }
+
+    // Trigger an Event:
+    // ---------------
+    //
+    //     fsm.trigger('submit');
+    //     fsm.state; // "submitted"
+
   }, {
     key: 'trigger',
     value: function trigger(eventName) {
@@ -155,6 +179,52 @@ var MicroMachine = function () {
 
       this.triggerCallbacks(eventName, from, to);
       this.state = to;
+    }
+
+    // Helper functions
+    // ---------------
+
+    // Return an `Array` of all events.
+
+  }, {
+    key: 'getEvents',
+    value: function getEvents() {
+      return Object.values(this.events);
+    }
+
+    // Return a unique set (`Array`) of all states.
+
+  }, {
+    key: 'getStates',
+    value: function getStates() {
+      var states = [];
+      this.getEvents().forEach(function (event) {
+        var statesToAdd = Object.keys(event).concat(Object.values(event));
+        states = states.concat(statesToAdd);
+      });
+      return Array.from(new Set(states));
+    }
+
+    // Return an `Array` of callback functions for an event.
+
+  }, {
+    key: 'getCallbacks',
+    value: function getCallbacks(eventName) {
+      return this.callbacks[eventName] || [];
+    }
+
+    // Loop through each callback function and call it.
+    // Pass each function an event object:
+    //
+    //     {from: String, to: String, eventName: String}
+
+  }, {
+    key: 'triggerCallbacks',
+    value: function triggerCallbacks(eventName, from, to) {
+      var callbacks = this.getCallbacks(eventName).concat(this.getCallbacks('any'));
+      callbacks.forEach(function (callback) {
+        callback({ from: from, to: to, eventName: eventName });
+      });
     }
   }]);
 

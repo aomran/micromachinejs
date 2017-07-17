@@ -10,7 +10,8 @@
     "test:coverage": "nyc npm test && nyc report --reporter=text-lcov",
     "coveralls": "npm run test:coverage | coveralls",
     "lint": "eslint --ext .jsx,.js src test",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "docs": "docco src/micromachine.js"
   },
   "author": "Ahmed Omran",
   "license": "MIT",
@@ -22,6 +23,7 @@
     "babel-register": "^6.24.1",
     "compression-webpack-plugin": "^1.0.0",
     "coveralls": "^2.13.1",
+    "docco": "^0.7.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.7.0",

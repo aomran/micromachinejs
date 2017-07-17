@@ -17,6 +17,7 @@ $ npm install micromachinejs --save
 Initialize the finite state machine:
 
 ```javascript
+// ES2015 syntax
 import MicroMachine from 'micromachinejs';
 const initialState = 'unsubmitted';
 const fsm = new MicroMachine(initialState);
@@ -34,7 +35,7 @@ fsm
   .when('approve', { submitted: 'approved' });
 ```
 
-Subscribe to events:
+Listen to events:
 
 ```javascript
 fsm
@@ -49,4 +50,11 @@ fsm
   .on('revert', (event) => {
     // do something else
   });
+```
+
+Trigger an event:
+
+```javascript
+fsm.trigger('submit');
+fsm.state; // "submitted"
 ```

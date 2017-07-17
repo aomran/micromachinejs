@@ -3,7 +3,7 @@ import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 
 const unminified = {
-  entry: './src/index.js',
+  entry: './src/micromachine.js',
   module: {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
@@ -16,7 +16,7 @@ const unminified = {
 };
 
 const minified = {
-  entry: './src/index.js',
+  entry: './src/micromachine.js',
   module: {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
