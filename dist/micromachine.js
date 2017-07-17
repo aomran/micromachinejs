@@ -90,7 +90,7 @@ var MicroMachine = function () {
   // Initial State:
   // ---------------
   //
-  //     import MicroMachine from 'micromachinejs';
+  //     const MicroMachine = require('micromachinejs');
   //     const initialState = 'unsubmitted';
   //     const fsm = new MicroMachine(initialState);
 

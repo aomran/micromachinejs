@@ -4,7 +4,7 @@
   "description": "Small Finite State Machine implementation in JavaScript.",
   "main": "dist/micromachine.js",
   "scripts": {
-    "build": "webpack --config webpack.config.babel.js",
+    "build": "webpack --config webpack.config.babel.js && npm run docs",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill",
     "test:watch": "mocha --compilers js:babel-core/register --watch --require babel-polyfill",
     "test:coverage": "nyc npm test && nyc report --reporter=text-lcov",
