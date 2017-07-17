@@ -76,7 +76,7 @@ describe('#on()', () => {
     });
     it('should do nothing without callbacks', () => {
       const fsm = fsmFactory();
-      fsm.on('submit')
+      fsm.on('submit');
       const callbacks = fsm.getCallbacks('submit').length;
 
       assert.equal(callbacks, 0);
