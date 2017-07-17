@@ -1,5 +1,6 @@
 import path from 'path';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
 
 const unminified = {
   entry: './src/index.js',
@@ -26,7 +27,12 @@ const minified = {
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
-    new UglifyJSPlugin()
+    new UglifyJSPlugin(),
+    new CompressionPlugin({
+			asset: "[path].gz[query]",
+			algorithm: "gzip",
+			test: /\.(js|html)$/,
+		})
   ]
 }
 
