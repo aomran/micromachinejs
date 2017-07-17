@@ -38,6 +38,15 @@ describe('#when()', () => {
     });
   });
 
+  describe('define no events', () => {
+    it('should return empty list of states', () => {
+      const fsm = new MicroMachine('unsubmitted');
+      fsm.when('submit');
+
+      assert.deepEqual(fsm.getStates(), []);
+    });
+  });
+
   describe('define multiple events', () => {
     it('should return list of states', () => {
       const fsm = fsmFactory();
@@ -64,6 +73,13 @@ describe('#on()', () => {
       const callbacks = fsm.getCallbacks('submit').length;
 
       assert.equal(callbacks, 2);
+    });
+    it('should do nothing without callbacks', () => {
+      const fsm = fsmFactory();
+      fsm.on('submit')
+      const callbacks = fsm.getCallbacks('submit').length;
+
+      assert.equal(callbacks, 0);
     });
   });
 });
