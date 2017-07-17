@@ -43,6 +43,9 @@ class MicroMachine {
   //       })
   //       .on('revert', (event) => {
   //          // do something else
+  //       })
+  //       .on('any', (event) => {
+  //          // do something when any event is triggered
   //       });
   on(eventName, callback) {
     if (!callback) { return this; }
@@ -70,14 +73,17 @@ class MicroMachine {
   // Trigger an Event:
   // ---------------
   //
-  //     fsm.trigger('submit');
+  //     fsm.trigger('submit'); // true
   //     fsm.state; // "submitted"
   trigger(eventName) {
-    const from = this.state;
-    const to = this.events[eventName][this.state];
-
-    this.triggerCallbacks(eventName, from, to);
-    this.state = to;
+    if (this.canTriggerEvent(eventName)) {
+      const from = this.state;
+      const to = this.events[eventName][this.state];
+      this.triggerCallbacks(eventName, from, to);
+      this.state = to;
+      return true;
+    }
+    return false;
   }
 
   // Helper functions
@@ -86,6 +92,19 @@ class MicroMachine {
   // Return an `Array` of all events.
   getEvents() {
     return Object.values(this.events);
+  }
+
+  // Return an `Array` of available events.
+  getAvailableEvents() {
+    const eventNames = Object.keys(this.events);
+    return eventNames.filter(eventName => this.canTriggerEvent(eventName));
+  }
+
+
+  // Can event be triggered? Return a `Boolean`.
+  canTriggerEvent(eventName) {
+    const events = this.events[eventName] || {};
+    return Object.prototype.hasOwnProperty.call(events, this.state);
   }
 
   // Return a unique set (`Array`) of all states.

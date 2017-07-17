@@ -139,6 +139,9 @@
   })
   .on(<span class="hljs-string">'revert'</span>, (event) =&gt; {
      <span class="hljs-comment">// do something else</span>
+  })
+  .on(<span class="hljs-string">'any'</span>, (event) =&gt; {
+     <span class="hljs-comment">// do something when any event is triggered</span>
   });
 </code></pre>
             </div>
@@ -210,17 +213,20 @@ fsm.off() <span class="hljs-comment">// remove all event callbacks</span>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <pre><code>fsm.trigger(<span class="hljs-string">'submit'</span>);
+              <pre><code>fsm.trigger(<span class="hljs-string">'submit'</span>); <span class="hljs-comment">// true</span>
 fsm.state; <span class="hljs-comment">// "submitted"</span>
 </code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>  trigger(eventName) {
-    <span class="hljs-keyword">const</span> <span class="hljs-keyword">from</span> = <span class="hljs-keyword">this</span>.state;
-    <span class="hljs-keyword">const</span> to = <span class="hljs-keyword">this</span>.events[eventName][<span class="hljs-keyword">this</span>.state];
-
-    <span class="hljs-keyword">this</span>.triggerCallbacks(eventName, <span class="hljs-keyword">from</span>, to);
-    <span class="hljs-keyword">this</span>.state = to;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.canTriggerEvent(eventName)) {
+      <span class="hljs-keyword">const</span> <span class="hljs-keyword">from</span> = <span class="hljs-keyword">this</span>.state;
+      <span class="hljs-keyword">const</span> to = <span class="hljs-keyword">this</span>.events[eventName][<span class="hljs-keyword">this</span>.state];
+      <span class="hljs-keyword">this</span>.triggerCallbacks(eventName, <span class="hljs-keyword">from</span>, to);
+      <span class="hljs-keyword">this</span>.state = to;
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
   }</pre></div></div>
             
         </li>
@@ -274,6 +280,42 @@ fsm.state; <span class="hljs-comment">// "submitted"</span>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
+              <p>Return an <code>Array</code> of available events.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  getAvailableEvents() {
+    <span class="hljs-keyword">const</span> eventNames = <span class="hljs-built_in">Object</span>.keys(<span class="hljs-keyword">this</span>.events);
+    <span class="hljs-keyword">return</span> eventNames.filter(<span class="hljs-function"><span class="hljs-params">eventName</span> =&gt;</span> <span class="hljs-keyword">this</span>.canTriggerEvent(eventName));
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Can event be triggered? Return a <code>Boolean</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  canTriggerEvent(eventName) {
+    <span class="hljs-keyword">const</span> events = <span class="hljs-keyword">this</span>.events[eventName] || {};
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.prototype.hasOwnProperty.call(events, <span class="hljs-keyword">this</span>.state);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
               <p>Return a unique set (<code>Array</code>) of all states.</p>
 
             </div>
@@ -290,11 +332,11 @@ fsm.state; <span class="hljs-comment">// "submitted"</span>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Return an <code>Array</code> of callback functions for an event.</p>
 
@@ -307,11 +349,11 @@ fsm.state; <span class="hljs-comment">// "submitted"</span>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Loop through each callback function and call it.
 Pass each function an event object:</p>

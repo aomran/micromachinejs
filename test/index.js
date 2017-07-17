@@ -144,19 +144,57 @@ describe('#off()', () => {
 });
 
 describe('#trigger()', () => {
-  it('should change state', () => {
-    const fsm = fsmFactory();
-    fsm.trigger('submit');
-
-    assert.equal(fsm.state, 'submitted');
+  describe('unavailable events', () => {
+    it('should not change state and return false', () => {
+      const fsm = fsmFactory();
+      assert.equal(fsm.trigger('approve'), false);
+      assert.equal(fsm.state, 'unsubmitted');
+    });
   });
-  it('should trigger callbacks', () => {
+
+  describe('undefined events', () => {
+    it('should not change state and return false', () => {
+      const fsm = fsmFactory();
+      assert.equal(fsm.trigger('bad!'), false);
+      assert.equal(fsm.state, 'unsubmitted');
+    });
+  });
+
+  describe('available events', () => {
+    it('should change state and return true', () => {
+      const fsm = fsmFactory();
+      assert.ok(fsm.trigger('submit'));
+      assert.equal(fsm.state, 'submitted');
+    });
+
+    it('should trigger callbacks', () => {
+      const fsm = fsmFactory();
+      let counter = 0;
+      fsm.on('submit', () => (counter += 1));
+      assert.equal(counter, 0);
+
+      fsm.trigger('submit');
+      assert.equal(counter, 1);
+    });
+
+    it('any callbacks should always trigger', () => {
+      const fsm = fsmFactory();
+      let counter = 0;
+      fsm.on('any', () => (counter += 1));
+      assert.equal(counter, 0);
+
+      fsm.trigger('submit');
+      assert.equal(counter, 1);
+    });
+  });
+});
+
+describe('#getAvailableEvents()', () => {
+  it('should return list of available events', () => {
     const fsm = fsmFactory();
-    let counter = 0;
-    fsm.on('submit', () => (counter += 1));
-    assert.equal(counter, 0);
+    assert.deepEqual(fsm.getAvailableEvents(), ['submit']);
 
     fsm.trigger('submit');
-    assert.equal(counter, 1);
+    assert.deepEqual(fsm.getAvailableEvents(), ['revert', 'approve']);
   });
 });

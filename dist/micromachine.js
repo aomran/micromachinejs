@@ -139,6 +139,9 @@ var MicroMachine = function () {
     //       })
     //       .on('revert', (event) => {
     //          // do something else
+    //       })
+    //       .on('any', (event) => {
+    //          // do something when any event is triggered
     //       });
 
   }, {
@@ -174,17 +177,20 @@ var MicroMachine = function () {
     // Trigger an Event:
     // ---------------
     //
-    //     fsm.trigger('submit');
+    //     fsm.trigger('submit'); // true
     //     fsm.state; // "submitted"
 
   }, {
     key: 'trigger',
     value: function trigger(eventName) {
-      var from = this.state;
-      var to = this.events[eventName][this.state];
-
-      this.triggerCallbacks(eventName, from, to);
-      this.state = to;
+      if (this.canTriggerEvent(eventName)) {
+        var from = this.state;
+        var to = this.events[eventName][this.state];
+        this.triggerCallbacks(eventName, from, to);
+        this.state = to;
+        return true;
+      }
+      return false;
     }
 
     // Helper functions
@@ -196,6 +202,28 @@ var MicroMachine = function () {
     key: 'getEvents',
     value: function getEvents() {
       return Object.values(this.events);
+    }
+
+    // Return an `Array` of available events.
+
+  }, {
+    key: 'getAvailableEvents',
+    value: function getAvailableEvents() {
+      var _this = this;
+
+      var eventNames = Object.keys(this.events);
+      return eventNames.filter(function (eventName) {
+        return _this.canTriggerEvent(eventName);
+      });
+    }
+
+    // Can event be triggered? Return a `Boolean`.
+
+  }, {
+    key: 'canTriggerEvent',
+    value: function canTriggerEvent(eventName) {
+      var events = this.events[eventName] || {};
+      return Object.prototype.hasOwnProperty.call(events, this.state);
     }
 
     // Return a unique set (`Array`) of all states.

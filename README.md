@@ -50,12 +50,15 @@ fsm
   })
   .on('revert', (event) => {
     // do something else
+  })
+  .on('any', (event) => {
+    // do something when any event is triggered
   });
 ```
 
 Trigger an event:
 
 ```javascript
-fsm.trigger('submit');
+fsm.trigger('submit'); // true
 fsm.state; // "submitted"
 ```
