@@ -70,39 +70,36 @@
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function SomeException(message) {
-  this.message = message;
-  this.name = 'SomeException';
-}
-
-throw new SomeException('InvalidMonthNo');
-
 var MicroMachine = function () {
-  function MicroMachine(initialState) {
+  function MicroMachine() {
+    var initialState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initial';
+
     _classCallCheck(this, MicroMachine);
 
     this.state = initialState;
-    this._events = {};
-    this._callbacks = {};
+    this.events = {};
+    this.callbacks = {};
   }
 
   _createClass(MicroMachine, [{
-    key: 'getTransitions',
-    value: function getTransitions() {
-      return Object.values(this._events).reduce(function (a, b) {
-        return a.concat(b);
-      }, []);
+    key: 'getEvents',
+    value: function getEvents() {
+      return Object.values(this.events);
     }
   }, {
     key: 'getStates',
     value: function getStates() {
       var states = [];
-      this.getTransitions().map(function (transition) {
-        var statesToAdd = Object.keys(transition).concat(Object.values(transition));
+      this.getEvents().forEach(function (event) {
+        var statesToAdd = Object.keys(event).concat(Object.values(event));
         states = states.concat(statesToAdd);
       });
       return Array.from(new Set(states)); // return unique set
@@ -110,12 +107,12 @@ var MicroMachine = function () {
   }, {
     key: 'getCallbacks',
     value: function getCallbacks(eventName) {
-      return this._callbacks[eventName] || [];
+      return this.callbacks[eventName] || [];
     }
   }, {
     key: 'triggerCallbacks',
     value: function triggerCallbacks(eventName, from, to) {
-      var callbacks = this.getCallbacks(eventName).concat(this.getCallbacks("any"));
+      var callbacks = this.getCallbacks(eventName).concat(this.getCallbacks('any'));
       callbacks.forEach(function (callback) {
         callback({
           from: from,
@@ -126,19 +123,27 @@ var MicroMachine = function () {
     }
   }, {
     key: 'when',
-    value: function when(eventName, transitions) {
-      this._events[eventName] = transitions;
+    value: function when(eventName) {
+      var events = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      this.events[eventName] = events;
+      return this;
     }
   }, {
     key: 'on',
     value: function on(eventName, callback) {
-      this.getCallbacks(eventName).push(callback);
+      if (!callback) return this;
+      var handlers = this.getCallbacks(eventName);
+      handlers.push(callback);
+      this.callbacks[eventName] = handlers;
+
+      return this;
     }
   }, {
     key: 'trigger',
     value: function trigger(eventName) {
       var from = this.state;
-      var to = this._events[eventName][this.state];
+      var to = this.events[eventName][this.state];
 
       this.triggerCallbacks(eventName, from, to);
       this.state = to;
@@ -148,12 +153,7 @@ var MicroMachine = function () {
   return MicroMachine;
 }();
 
-var fsm = new MicroMachine("unsubmitted");
-
-// define events
-// fsm.when('submit', [{'unsubmitted': 'submitted'}])
-// fsm.when('approve', [{'submitted': 'conditional approval'}])
-// fsm.when('complete', [{'conditional approval': 'completed'}, {'unsubmitted': 'completed'}])
+exports.default = MicroMachine;
 
 /***/ })
 /******/ ]);
