@@ -2,7 +2,7 @@
   "name": "micromachinejs",
   "version": "1.0.0",
   "description": "Small Finite State Machine implementation in JavaScript.",
-  "main": "micromachine.js",
+  "main": "dist/micromachine.js",
   "scripts": {
     "build": "webpack --config webpack.config.babel.js",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill",
@@ -36,7 +36,14 @@
     "webpack": "^3.3.0"
   },
   "files": [
-    "src/**/*.js",
-    "dist/**/*.js"
-  ]
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aomran/micromachinejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aomran/micromachinejs/issues"
+  },
+  "homepage": "https://github.com/aomran/micromachinejs"
 }
