@@ -12,9 +12,7 @@ class MicroMachine {
   getStates() {
     let states = [];
     this.getEvents().forEach((event) => {
-      const statesToAdd = Object.keys(event).concat(
-        Object.values(event),
-      );
+      const statesToAdd = Object.keys(event).concat(Object.values(event));
       states = states.concat(statesToAdd);
     });
     return Array.from(new Set(states)); // return unique set
@@ -25,15 +23,9 @@ class MicroMachine {
   }
 
   triggerCallbacks(eventName, from, to) {
-    const callbacks = this.getCallbacks(eventName).concat(
-      this.getCallbacks('any'),
-    );
+    const callbacks = this.getCallbacks(eventName).concat(this.getCallbacks('any'));
     callbacks.forEach((callback) => {
-      callback({
-        from,
-        to,
-        eventName,
-      });
+      callback({ from, to, eventName });
     });
   }
 
@@ -43,11 +35,20 @@ class MicroMachine {
   }
 
   on(eventName, callback) {
-    if (!callback) return this;
+    if (!callback) { return this; }
     const handlers = this.getCallbacks(eventName);
     handlers.push(callback);
     this.callbacks[eventName] = handlers;
 
+    return this;
+  }
+
+  off(eventName) {
+    if (eventName) {
+      this.callbacks[eventName] = [];
+    } else {
+      this.callbacks = {};
+    }
     return this;
   }
 

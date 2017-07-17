@@ -7,7 +7,7 @@
     "build": "webpack --config webpack.config.babel.js",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill",
     "test:watch": "mocha --compilers js:babel-core/register --watch --require babel-polyfill",
-    "lint": "eslint --ext .jsx,.js src tests",
+    "lint": "eslint --ext .jsx,.js src test",
     "lint:fix": "npm run lint -- --fix"
   },
   "author": "Ahmed Omran",

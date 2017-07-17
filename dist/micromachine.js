@@ -114,11 +114,7 @@ var MicroMachine = function () {
     value: function triggerCallbacks(eventName, from, to) {
       var callbacks = this.getCallbacks(eventName).concat(this.getCallbacks('any'));
       callbacks.forEach(function (callback) {
-        callback({
-          from: from,
-          to: to,
-          eventName: eventName
-        });
+        callback({ from: from, to: to, eventName: eventName });
       });
     }
   }, {
@@ -132,11 +128,23 @@ var MicroMachine = function () {
   }, {
     key: 'on',
     value: function on(eventName, callback) {
-      if (!callback) return this;
+      if (!callback) {
+        return this;
+      }
       var handlers = this.getCallbacks(eventName);
       handlers.push(callback);
       this.callbacks[eventName] = handlers;
 
+      return this;
+    }
+  }, {
+    key: 'off',
+    value: function off(eventName) {
+      if (eventName) {
+        this.callbacks[eventName] = [];
+      } else {
+        this.callbacks = {};
+      }
       return this;
     }
   }, {
