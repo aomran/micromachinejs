@@ -1,19 +1,19 @@
 class MicroMachine {
-  constructor(initialState="initial") {
+  constructor(initialState = 'initial') {
     this.state = initialState;
-    this._events = {};
-    this._callbacks = {};
+    this.events = {};
+    this.callbacks = {};
   }
 
   getEvents() {
-    return Object.values(this._events);
+    return Object.values(this.events);
   }
 
   getStates() {
     let states = [];
-    this.getEvents().map(event => {
-      let statesToAdd = Object.keys(event).concat(
-        Object.values(event)
+    this.getEvents().forEach((event) => {
+      const statesToAdd = Object.keys(event).concat(
+        Object.values(event),
       );
       states = states.concat(statesToAdd);
     });
@@ -21,41 +21,41 @@ class MicroMachine {
   }
 
   getCallbacks(eventName) {
-    return this._callbacks[eventName] || [];
+    return this.callbacks[eventName] || [];
   }
 
-  _triggerCallbacks(eventName, from, to) {
+  triggerCallbacks(eventName, from, to) {
     const callbacks = this.getCallbacks(eventName).concat(
-      this.getCallbacks("any")
+      this.getCallbacks('any'),
     );
     callbacks.forEach((callback) => {
       callback({
-        from: from,
-        to: to,
-        eventName: eventName
+        from,
+        to,
+        eventName,
       });
     });
   }
 
-  when(eventName, events={}) {
-    this._events[eventName] = events;
+  when(eventName, events = {}) {
+    this.events[eventName] = events;
     return this;
   }
 
   on(eventName, callback) {
     if (!callback) return this;
-    let handlers = this.getCallbacks(eventName);
+    const handlers = this.getCallbacks(eventName);
     handlers.push(callback);
-    this._callbacks[eventName] = handlers
+    this.callbacks[eventName] = handlers;
 
     return this;
   }
 
   trigger(eventName) {
     const from = this.state;
-    const to = this._events[eventName][this.state];
+    const to = this.events[eventName][this.state];
 
-    this._triggerCallbacks(eventName, from, to);
+    this.triggerCallbacks(eventName, from, to);
     this.state = to;
   }
 }
