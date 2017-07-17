@@ -11,7 +11,9 @@ const unminified = {
   },
   output: {
     filename: 'micromachine.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    library: 'MicroMachine',
+    libraryTarget: 'umd'
   }
 };
 
@@ -24,7 +26,9 @@ const minified = {
   },
   output: {
     filename: 'micromachine.min.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    library: 'MicroMachine',
+    libraryTarget: 'umd'
   },
   plugins: [
     new UglifyJSPlugin(),

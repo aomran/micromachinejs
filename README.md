@@ -17,8 +17,9 @@ $ npm install micromachinejs --save
 Initialize the finite state machine:
 
 ```javascript
-// ES2015 syntax
-import MicroMachine from 'micromachinejs';
+// Library is exported as UMD so require it in node.
+// In browsers there should be a MicroMachine global.
+const MicroMachine = require('micromachinejs');
 const initialState = 'unsubmitted';
 const fsm = new MicroMachine(initialState);
 ```
