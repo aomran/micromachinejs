@@ -1,3 +1,15 @@
+engines:
+  eslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript:
+ratings:
+  paths:
+  - src/**
+  - test/**
 exclude_paths:
 - "docs/"
 - "dist/"
