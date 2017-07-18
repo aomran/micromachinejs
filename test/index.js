@@ -1,6 +1,7 @@
-import assert from 'assert';
-import { describe, it } from 'mocha';
-import MicroMachine from '../src/micromachine';
+const assert = require('assert');
+const describe = require('mocha').describe;
+const it = require('mocha').it;
+const MicroMachine = require('../src/micromachine');
 
 function fsmFactory() {
   const fsm = new MicroMachine('unsubmitted');
