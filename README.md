@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/aomran/micromachinejs.svg?branch=master)](https://travis-ci.org/aomran/micromachinejs)
 [![npm version](https://badge.fury.io/js/micromachinejs.svg)](https://badge.fury.io/js/micromachinejs)
 [![Coverage Status](https://coveralls.io/repos/github/aomran/micromachinejs/badge.svg)](https://coveralls.io/github/aomran/micromachinejs)
+[![Code Climate](https://codeclimate.com/github/aomran/micromachinejs/badges/gpa.svg)](https://codeclimate.com/github/aomran/micromachinejs)
 
 This is a small Finite State Machine implementation in JavaScript inspired by a similar [library in ruby](https://github.com/soveran/micromachine). The [annotated source code](https://aomran.github.io/micromachinejs/micromachine.html) is available as documentation.
 
